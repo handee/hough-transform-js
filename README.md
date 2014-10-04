@@ -24,3 +24,9 @@ A simple script to perform Hough transform in JavaScript given a canvas.
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+
+ ADAPTED BY Hannah Dee 2014 to show details of Rho and Theta in
+ the visualisation, and to have a larger canvas to experiment with,
+ hmd1@aber.ac.uk/hmd@hannahdee.eu
+
+

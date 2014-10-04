@@ -17,8 +17,12 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
+
+ ADAPTED BY Hannah Dee 2014 to show details of Rho and Theta in
+ the visualisation, and to have a larger canvas to experiment with,
+ hmd1@aber.ac.uk/hmd@hannahdee.eu
+
 -->
-<link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.0.4/css/bootstrap-combined.min.css" rel="stylesheet">
 <style>
 canvas {
   border: 1px solid black;
@@ -27,10 +31,11 @@ canvas {
 </head>
 <body>
 <h1>Hough Transform in JavaScript</h1>
-<canvas id=drawing width=200 height=200></canvas>
+<canvas id=drawing width=300 height=300></canvas>
+
 <canvas id=houghSp width=360 height=283></canvas>
-<p>This is a basic demo of Hough transform in JavaScript.
-<p>Write shapes in the left canvas and see what it looks like in a Hough space on the right.
+<p>This is a demo of the Hough transform in JavaScript.</p>
+<p>If you write shapes on the left canvas you can see what it looks like in a Hough space on the right.  Try writing parallel lines - Theta should be the same. 
 <script src="hough-transform.js"></script>
 </body>
 </html>

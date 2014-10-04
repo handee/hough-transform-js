@@ -14,11 +14,15 @@
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
+
+ ADAPTED BY Hannah Dee 2014 to show details of Rho and Theta in
+ the visualisation, and to have a larger canvas to experiment with
+ hmd1@aber.ac.uk/hmd@hannahdee.eu
 */
 
 'use strict';
 
-var THICKNESS = 4;
+var THICKNESS = 2;
 
 var $drawing = document.getElementById('drawing');
 var $houghSp = document.getElementById('houghSp');
@@ -36,10 +40,32 @@ var rhoMax = Math.sqrt(drawingWidth * drawingWidth + drawingHeight * drawingHeig
 var accum = Array(numAngleCells);
 
 // Set the size of the Hough space.
-$houghSp.width = numAngleCells;
-$houghSp.height = rhoMax;
+var border = 20;
+$houghSp.width = numAngleCells+border+border;
+$houghSp.height = rhoMax+border+border;
 
-HSctx.fillStyle = 'rgba(0,0,0,.01)';
+HSctx.fillStyle = 'rgba(0,0,0,.5)';
+HSctx.strokeStyle = 'rgba(0,0,0,.5)';
+
+HSctx.beginPath();
+HSctx.moveTo(border,border);
+HSctx.lineTo(border,rhoMax+border);
+HSctx.lineTo(numAngleCells+border,rhoMax+border);
+HSctx.stroke();
+
+HSctx.font="10px Arial";
+HSctx.fillText("Rho",5,border);
+HSctx.fillText("Theta",numAngleCells,rhoMax+border+border/2);
+
+HSctx.fillStyle = 'rgba(0,0,0,.1)';
+
+
+function drawInHough(rho,thetaIndex) {
+
+    HSctx.beginPath();
+    HSctx.fillRect(thetaIndex+border, rho, 1, 1);
+    HSctx.closePath();
+}
 
 $drawing.addEventListener('mousedown', function() {
   drawingMode = true;
@@ -52,8 +78,9 @@ $drawing.addEventListener('mouseout', function() {
 });
 $drawing.addEventListener('mousemove', function(e) {
   if (drawingMode) {
-    var x = getX(e),
-        y = getY(e);
+    var rect=drawing.getBoundingClientRect();
+    var	x= (e.clientX-rect.left)/(rect.right-rect.left)*drawing.width;
+    var	y= (e.clientY-rect.top)/(rect.bottom-rect.top)*drawing.height;
     ctx.beginPath();
     ctx.fillRect(x - (THICKNESS / 2), y - (THICKNESS / 2), THICKNESS, THICKNESS);
     ctx.closePath();
@@ -61,23 +88,6 @@ $drawing.addEventListener('mousemove', function(e) {
     houghAcc(x, y);
   }
 
-  /**
-   * Extract the local X position from a mouse event.
-   * @param  {Event} e A mouse event.
-   * @return {number} The local X value of the mouse.
-   */
-  function getX(e) {
-    return e.layerX != undefined && e.layerX - e.target.clientLeft - e.target.offsetLeft || e.offsetX != undefined && e.offsetX || e.clientX != undefined && e.clientX;
-  }
-
-  /**
-   * Extract the local Y position from a mouse event.
-   * @param  {Event} e A mouse event.
-   * @return {number} The local Y value of the mouse.
-   */
-  function getY(e) {
-    return e.layerY != undefined && e.layerY - e.target.clientTop - e.target.offsetTop || e.offsetY != undefined && e.offsetY || e.clientY != undefined && e.clientY;
-  }
 });
 
 // Precalculate tables.
@@ -103,10 +113,8 @@ function houghAcc(x, y) {
     } else {
       accum[thetaIndex][rho]++;
     }
+    drawInHough(rho,thetaIndex);
 
-    HSctx.beginPath();
-    HSctx.fillRect(thetaIndex, rho, 1, 1);
-    HSctx.closePath();
   }
 }
 
@@ -126,9 +134,6 @@ function houghAccClassical(x, y) {
     } else {
       accum[thetaIndex][rho]++;
     }
-
-    HSctx.beginPath();
-    HSctx.fillRect(thetaIndex, rho, 1, 1);
-    HSctx.closePath();
+    drawInHough(rho,thetaIndex);
   }
 }
