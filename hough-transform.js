@@ -18,6 +18,10 @@
  ADAPTED BY Hannah Dee 2014 to show details of Rho and Theta in
  the visualisation, and to have a larger canvas to experiment with
  hmd1@aber.ac.uk/hmd@hannahdee.eu
+ 
+
+ FURTHER ADAPTED BY Hannah Dee 2016 to visualise best fit line so far
+ in Red
 */
 
 'use strict';
@@ -67,6 +71,47 @@ function drawInHough(rho,thetaIndex) {
     HSctx.closePath();
 }
 
+function findMaxInHough() {
+    var max=0;
+    var bestRho=0;
+    var bestTheta=0;
+    for (var i=0;i<360;i++) {
+       for (var j=0;j<accum[i].length;j++) {
+           if (accum[i][j]>max) {
+              max=accum[i][j];
+              bestRho=j;
+              bestTheta=i;
+           }
+       }
+    }
+	
+ 
+    if (max>30) {
+		    HSctx.fillStyle = 'rgba(255,0,0,1)';
+	        HSctx.fillRect(bestTheta+border,bestRho,2,2);
+            HSctx.fillStyle = 'rgba(0,0,0,.1)';
+
+// now to backproject into drawing space
+            bestRho<<=1; // accumulator is bitshifted
+            bestRho-=rhoMax; /// accumulator has rhoMax added
+            console.log(bestTheta,bestRho);
+            var a=cosTable[bestTheta];
+            var b=sinTable[bestTheta];
+            var x1=a*bestRho+1000*(-b);
+            var y1=(b*bestRho+1000*(a));
+            var x2=a*bestRho-1000*(-b);
+            var y2=(b*bestRho-1000*(a));
+            console.log(x1,y1,x2,y2);
+	    ctx.beginPath();
+	    ctx.strokeStyle='rgba(255,0,0,1)';
+            ctx.moveTo(x1+drawingWidth/2,y1+drawingHeight/2);
+            ctx.lineTo(x2+drawingWidth/2,y2+drawingHeight/2);
+	    ctx.stroke();
+	    ctx.strokeStyle='rgba(0,0,0,1)';
+	    ctx.closePath();
+    }
+}
+
 $drawing.addEventListener('mousedown', function() {
   drawingMode = true;
 });
@@ -81,15 +126,14 @@ $drawing.addEventListener('mousemove', function(e) {
     var rect=drawing.getBoundingClientRect();
     var	x= (e.clientX-rect.left)/(rect.right-rect.left)*drawing.width;
     var	y= (e.clientY-rect.top)/(rect.bottom-rect.top)*drawing.height;
+    ctx.fillStyle = 'rgba(0,0,0,1)';
     ctx.beginPath();
     ctx.fillRect(x - (THICKNESS / 2), y - (THICKNESS / 2), THICKNESS, THICKNESS);
     ctx.closePath();
 
     houghAcc(x, y);
   }
-
-});
-
+}); 
 // Precalculate tables.
 var cosTable = Array(numAngleCells);
 var sinTable = Array(numAngleCells);
@@ -116,6 +160,7 @@ function houghAcc(x, y) {
     drawInHough(rho,thetaIndex);
 
   }
+  findMaxInHough();
 }
 
 // Classical implementation.
