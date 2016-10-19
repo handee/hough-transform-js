@@ -4,10 +4,6 @@
 
 A simple script to perform Hough transform in JavaScript given a canvas.
 
-## Todos
-
-* Write lines on drawing canvas given a hover point on the hough space (see http://liquify.eu/flash/HoughTransform).
-* Benchmark classical vs. lookup tables implementations.
 
 ## License
 
@@ -29,4 +25,5 @@ A simple script to perform Hough transform in JavaScript given a canvas.
  the visualisation, and to have a larger canvas to experiment with,
  hmd1@aber.ac.uk/hmd@hannahdee.eu
 
-
+ Adapted yet again by Hannah Dee 2016 to show line matches backprojected
+ from Hough space into the drawing space.
